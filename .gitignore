@@ -1,0 +1,12 @@
+/target/**
+
+# Keep debug target resource directory
+!/target/debug/
+/target/debug/**
+!/target/debug/resources
+
+# Keep release target resource directory
+!/target/release/
+/target/release/**
+!/target/release/resources
+

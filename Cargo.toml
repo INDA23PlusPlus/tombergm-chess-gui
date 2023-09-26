@@ -1,0 +1,8 @@
+[package]
+name = "tombergm-chess-gui"
+version = "0.1.0"
+
+[dependencies]
+ggez = "0.9.3"
+scrappy-chess = { git = "https://github.com/INDA23PlusPlus/albjorkm-chess" }
+
