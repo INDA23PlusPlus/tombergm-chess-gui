@@ -99,7 +99,15 @@ impl ggez::event::EventHandler for Game
 		{
 			return Ok(());
 		}
-		
+
+		if self.moves.len() == 0
+		{
+			self.state = chess::ChessState::standard();
+			self.moves = self.state.get_moves(& self.move_set);
+
+			return Ok(());
+		}
+
 		let coords =
 		(
 			(x / 100.) as i32,
@@ -147,6 +155,12 @@ impl ggez::event::EventHandler for Game
 
 		let mut canvas = Canvas::from_frame(ctx, Color::WHITE);
 
+		let square_dp = DrawParam::default()
+			.scale([100., 100.]);
+
+		let icon_dp = DrawParam::default()
+			.scale([100. / 240., 100. / 240.]);
+
 		let circle = Mesh::new_circle
 		(
 			ctx,
@@ -156,14 +170,13 @@ impl ggez::event::EventHandler for Game
 			0.1,
 			Color::from_rgba(128, 128, 128, 128),
 		).expect("");
-
-		let square_dp = DrawParam::default()
-			.scale([100., 100.]);
-
-		let icon_dp = DrawParam::default()
-			.scale([100. / 240., 100. / 240.]);
-
 		let circle_dp = DrawParam::default();
+
+		let mut text = Text::new("");
+		text.set_scale(50.);
+		text.set_layout(TextLayout::center());
+		let text_dp = DrawParam::default()
+			.color(Color::from_rgb(120, 100, 90));
 
 		let board = chess_util::state_to_ascii(& self.state);
 
@@ -184,6 +197,8 @@ impl ggez::event::EventHandler for Game
 				];
 
 				let mut is_target = false;
+				let mut is_select = false;
+
 				if let Some(select) = self.select
 				{
 					let from = bit_loc(select);
@@ -197,10 +212,19 @@ impl ggez::event::EventHandler for Game
 							break;
 						}
 					}
+
+					if x == select.0 && y == select.1
+					{
+						is_select = true;
+					}
 				}
 
 				let color;
-				if (x + y) % 2 == 0
+				if is_select
+				{
+					color = Color::from_rgb(190, 210, 150);
+				}
+				else if (x + y) % 2 == 0
 				{
 					color = Color::from_rgb(255, 250, 240);
 				}
@@ -227,10 +251,42 @@ impl ggez::event::EventHandler for Game
 
 				if is_target
 				{
+					let color;
+
+					if c == ' '
+					{
+						color = Color::WHITE;
+					}
+					else
+					{
+						color = Color::RED;
+					}
+
 					canvas.draw
 					(
 						& circle,
-						circle_dp.dest(dest_c),
+						circle_dp
+							.dest(dest_c)
+							.color(color),
+					);
+				}
+
+				if self.moves.len() == 0
+				{
+					text.clear();
+					text.add("Game over!");
+					canvas.draw
+					(
+						& text,
+						text_dp.dest([400., 375.]),
+					);
+
+					text.clear();
+					text.add("Click anywhere to restart");
+					canvas.draw
+					(
+						& text,
+						text_dp.dest([400., 425.]),
 					);
 				}
 			}
