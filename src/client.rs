@@ -1,12 +1,12 @@
 extern crate scrappy_chess;
 extern crate serde;
 
-use driver::GameDriver;
+use crate::driver::GameDriver;
 use std::net::TcpStream;
 use std::ops::DerefMut;
 use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
-use util::*;
+use crate::util::*;
 
 struct State
 {

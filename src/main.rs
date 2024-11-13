@@ -6,10 +6,10 @@ mod driver;
 mod server;
 mod util;
 
-use client::ClientDriver;
-use driver::GameDriver;
-use server::ServerDriver;
-use util::{PieceKind, piece_is_kind, piece_from_kind};
+use crate::client::ClientDriver;
+use crate::driver::GameDriver;
+use crate::server::ServerDriver;
+use crate::util::{PieceKind, piece_is_kind, piece_from_kind};
 
 fn main()
 {
@@ -69,7 +69,7 @@ impl Game
 		-> Game
 	{
 		ctx.gfx.window().set_inner_size(
-			ggez::winit::dpi::PhysicalSize::new(550., 500.));
+			ggez::winit::dpi::PhysicalSize::new(900., 800.));
 
 		let mut game = Game
 		{
